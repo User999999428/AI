@@ -1,0 +1,20 @@
+# 파이썬 가상환경 / 캐시
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# AI 모델 파일 (처음 실행할 때 자동으로 내려받음)
+models/
+
+# 개인정보 보호: 혹시라도 영상·사진 파일이 생기면 절대 올리지 않는다
+*.mp4
+*.avi
+*.mov
+*.jpg
+*.jpeg
+*.png
+
+# OS
+.DS_Store
+Thumbs.db
