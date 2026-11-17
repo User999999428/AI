@@ -20,6 +20,15 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
    - 단계가 끝나면 사용자가 확인할 항목을 알려 준다.
 4. 코드는 단순하게. 고급 문법·과한 추상화보다 읽기 쉬운 코드를 우선한다.
 
+## 여러 컴퓨터에서 작업
+
+사용자는 여러 컴퓨터(Windows/Mac, 클라우드 세션)를 오가며 작업한다.
+- **작업 시작 시 `PROGRESS.md`를 먼저 읽고** 현재 단계와 사용자 확인 결과를 파악한다.
+- **작업이 끝나면 `PROGRESS.md`를 갱신**한다 (현재 상태, 확인 목록, 작업 일지 한 줄).
+- README 단계 체크박스, CLAUDE.md 단계 목록도 함께 맞춘다.
+- 패키지를 추가하면 `requirements.txt`에 넣는다 (`setup.bat`/`setup.sh`가 이 파일로 설치).
+- 컴퓨터마다 다른 것(`.venv/`, `models/`)은 커밋하지 않는다.
+
 ## 개발 단계 (진행 상황은 README 체크박스와 맞춘다)
 
 1. 웹캠 화면 + 얼굴 랜드마크 표시 ← 완료
@@ -48,6 +57,8 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
 - `main.py`: 웹캠 루프 (읽기 → 분석 → 그리기 → 표시, q로 종료)
 - `focuseye/face_tracker.py`: `FaceTracker` 클래스, 모델 다운로드
 - `focuseye/drawing.py`: 랜드마크·상태 텍스트 그리기
+- `setup.bat` / `setup.sh`: 새 컴퓨터용 설치 스크립트 (.venv 생성 + requirements 설치)
+- `PROGRESS.md`: 진행 상태·확인 목록·작업 일지
 - 새 분석 기능은 `focuseye/` 안에 기능별 모듈로 추가한다 (예: `eye_state.py`).
 
 ## 테스트

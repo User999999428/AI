@@ -1,0 +1,4 @@
+# Windows와 Mac을 오가며 작업할 때 줄바꿈 문자가 섞이지 않게 한다
+* text=auto eol=lf
+*.bat text eol=crlf
+*.sh text eol=lf

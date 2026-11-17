@@ -68,6 +68,16 @@ git clone https://github.com/User999999428/AI.git
 cd AI
 ```
 
+### 2~3. 자동 설치 (추천)
+
+설치 스크립트가 아래 2, 3번(가상환경 만들기 + 패키지 설치)을 한 번에 해 줍니다.
+
+- **Windows**: 폴더에서 `setup.bat` 더블클릭
+- **Mac**: 터미널에서 `bash setup.sh`
+
+끝나면 가상환경을 켜고(아래 2번의 "켜기" 명령) 4번으로 넘어가세요.
+직접 해 보고 싶다면 아래 2, 3번을 따라 하면 됩니다.
+
 ### 2. 가상환경 만들고 켜기
 
 가상환경은 이 프로젝트 전용 패키지 상자입니다. 다른 프로젝트와 섞이지 않게 해 줍니다.
@@ -128,6 +138,66 @@ python main.py
 모델 파일 주소:
 `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task`
 
+---
+
+## 다른 컴퓨터에서 이어서 작업하기
+
+코드는 GitHub에 올려 두고, 각 컴퓨터는 **받아서(pull) → 작업 → 올리기(push)**를 반복합니다.
+
+### 무엇이 옮겨지고, 무엇이 안 옮겨지나
+
+| 항목 | GitHub로 옮겨짐? | 새 컴퓨터에서는 |
+|---|---|---|
+| 코드, README, PROGRESS.md | O | `git pull`로 받음 |
+| 가상환경 `.venv/` | X (컴퓨터마다 다름) | `setup.bat` / `setup.sh` 한 번 실행 |
+| 모델 `models/` | X (용량 때문) | 첫 실행 때 자동 다운로드 |
+| 얼굴 영상·사진 | X (애초에 저장 안 함) | - |
+
+### 새 컴퓨터에서 처음 한 번
+
+1. Python과 Git 설치 (Git: [git-scm.com](https://git-scm.com/downloads))
+2. 위 "1. 코드 내려받기"대로 `git clone`
+3. `setup.bat`(Windows) 또는 `bash setup.sh`(Mac) 실행
+4. 커밋할 때 쓸 내 이름·이메일 등록 (컴퓨터마다 한 번)
+
+```bash
+git config --global user.name "내 이름"
+```
+
+```bash
+git config --global user.email "GitHub에 등록한 이메일"
+```
+
+5. 처음 `git push` 할 때 GitHub 로그인 창이 뜨면 로그인합니다.
+
+### 매번 작업할 때
+
+**시작 전: 최신 코드 받기** (다른 컴퓨터에서 한 작업을 가져옴)
+
+```bash
+git pull
+```
+
+그리고 `PROGRESS.md`를 열어 어디까지 했는지 확인합니다.
+`requirements.txt`가 바뀌었다면 설치 스크립트를 한 번 더 실행하세요.
+
+**끝난 후: 올리기** (`PROGRESS.md`의 작업 일지도 한 줄 적어 두기)
+
+```bash
+git add .
+```
+
+```bash
+git commit -m "무엇을 했는지 한 줄 설명"
+```
+
+```bash
+git push
+```
+
+> **push를 잊지 마세요.** 올리지 않으면 다른 컴퓨터에서 이어서 할 수 없습니다.
+> 같은 내용을 두 컴퓨터에서 동시에 고치면 충돌이 날 수 있으니, 항상 pull 먼저!
+
 ## 파일 구조
 
 ```
@@ -138,6 +208,8 @@ AI/
 │   └── drawing.py          # 화면에 랜드마크·상태 글자 그리기
 ├── models/                 # AI 모델 (자동 다운로드, git에 안 올림)
 ├── requirements.txt        # 필요 패키지 목록
+├── setup.bat / setup.sh    # 새 컴퓨터 자동 설치 (Windows / Mac)
+├── PROGRESS.md             # 진행 기록: 어디까지 했나, 다음 할 일
 ├── README.md
 └── CLAUDE.md               # AI 도우미(Claude)용 작업 규칙
 ```
