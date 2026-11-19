@@ -58,6 +58,9 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
 - `focuseye/face_tracker.py`: `FaceTracker` 클래스, 모델 다운로드
 - `focuseye/drawing.py`: 랜드마크·상태 텍스트 그리기
 - `setup.bat` / `setup.sh`: 새 컴퓨터용 설치 스크립트 (.venv 생성 + requirements 설치)
+- `run.bat`: Windows 더블클릭 실행 (.venv 켜기 → `python main.py`, 오류 시 창 멈춤)
+  - `main.py`는 오류면 종료 코드 1을 돌려줘야 한다 (run.bat이 이것으로 오류를 판단).
+  - `.bat` 파일의 화면 메시지(echo)는 영어, 주석(REM)은 한국어. 맨 위에 `chcp 65001`.
 - `PROGRESS.md`: 진행 상태·확인 목록·작업 일지
 - 새 분석 기능은 `focuseye/` 안에 기능별 모듈로 추가한다 (예: `eye_state.py`).
 

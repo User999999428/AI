@@ -115,6 +115,15 @@ pip install -r requirements.txt
 
 ### 4. 실행
 
+**Windows: `run.bat` 더블클릭 (가장 쉬움)**
+
+- 가상환경을 켜고 `main.py`를 실행하는 것까지 한 번에 해 줍니다. 명령어를 입력할 필요가 없습니다.
+- `setup.bat`을 먼저 한 번 실행해 두어야 합니다. 안 했다면 그렇게 하라는 안내가 나옵니다.
+- 오류가 나면 창이 바로 닫히지 않고 멈추니, 메시지를 읽고 아무 키나 눌러 닫으세요.
+- 웹캠 번호를 바꾸려면 명령 프롬프트에서 `run.bat --camera 1` 처럼 실행합니다.
+
+**직접 실행 (Windows, Mac 모두)**: 가상환경을 켠 상태에서
+
 ```bash
 python main.py
 ```
@@ -209,6 +218,7 @@ AI/
 ├── models/                 # AI 모델 (자동 다운로드, git에 안 올림)
 ├── requirements.txt        # 필요 패키지 목록
 ├── setup.bat / setup.sh    # 새 컴퓨터 자동 설치 (Windows / Mac)
+├── run.bat                 # Windows: 더블클릭으로 실행
 ├── PROGRESS.md             # 진행 기록: 어디까지 했나, 다음 할 일
 ├── README.md
 └── CLAUDE.md               # AI 도우미(Claude)용 작업 규칙

@@ -8,6 +8,7 @@
 """
 
 import argparse
+import sys
 import time
 
 import cv2
@@ -19,6 +20,10 @@ WINDOW_NAME = "FocusEye+"
 
 
 def main():
+    """프로그램 본체. 정상 종료면 0, 오류면 1을 돌려준다.
+
+    (run.bat은 이 값이 1이면 창을 바로 닫지 않고 오류 메시지를 보여 준다)
+    """
     # 명령줄 옵션: 웹캠이 여러 개면 --camera 1 처럼 번호를 바꿔 볼 수 있다
     parser = argparse.ArgumentParser(description="FocusEye+ 1단계")
     parser.add_argument("--camera", type=int, default=0, help="웹캠 번호 (기본 0)")
@@ -27,8 +32,9 @@ def main():
     cap = cv2.VideoCapture(args.camera)
     if not cap.isOpened():
         print(f"[오류] {args.camera}번 웹캠을 열 수 없습니다. 연결 상태나 카메라 권한을 확인하세요.")
-        return
+        return 1
 
+    exit_code = 0
     fps = 0.0
     prev_time = time.monotonic()
 
@@ -37,6 +43,7 @@ def main():
             ok, frame = cap.read()  # 웹캠에서 사진 한 장(프레임)을 읽는다
             if not ok:
                 print("[오류] 웹캠 영상을 읽지 못했습니다.")
+                exit_code = 1
                 break
 
             # 좌우 반전: 거울처럼 보이게 해서 움직임이 자연스럽다
@@ -65,7 +72,8 @@ def main():
 
     cap.release()
     cv2.destroyAllWindows()
+    return exit_code
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())  # 종료 코드(0 또는 1)를 운영체제에 알려 준다

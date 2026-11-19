@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 > nul
 REM ===== FocusEye+ 설치 스크립트 (Windows) =====
 REM 새 컴퓨터에서 처음 한 번 더블클릭하거나, 명령 프롬프트에서 setup.bat 실행.
 REM 하는 일: 가상환경(.venv) 만들기 -> 필요한 패키지 설치
@@ -40,7 +41,5 @@ if errorlevel 1 (
 )
 
 echo.
-echo Done! To run:
-echo   .venv\Scripts\activate
-echo   python main.py
+echo Done! To run: double-click run.bat
 pause
