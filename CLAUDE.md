@@ -32,7 +32,7 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
 ## 개발 단계 (진행 상황은 README 체크박스와 맞춘다)
 
 1. 웹캠 화면 + 얼굴 랜드마크 표시 ← 완료
-2. 눈 감김 감지
+2. 눈 감김 감지 ← 완료 (EAR + 감은 시간, c 키 보정)
 3. 얼굴 방향, 시선 방향 추정
 4. 자리 이탈 감지
 5. 집중도 점수 계산
@@ -50,13 +50,23 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
 - `output_facial_transformation_matrixes=True`가 켜져 있음 → 3단계 고개 각도 계산에 사용.
 - OpenCV는 `opencv-contrib-python`만 쓴다 (mediapipe 의존성). `opencv-python`을 추가하면 충돌.
 - 프레임은 `cv2.flip(frame, 1)`로 좌우 반전된 상태로 분석한다 (거울 화면).
-  좌/우 판단 로직을 짤 때 이 점을 고려할 것.
+  좌/우 판단 로직을 짤 때 이 점을 고려할 것. 좌우 이름은 **화면 기준**으로 통일한다
+  (예: `SCREEN_LEFT_EYE` = 화면 왼쪽에 보이는 눈 = 랜드마크 33, 160, 158, 133, 153, 144).
+- 거리 계산은 반드시 픽셀 좌표로 (x × width, y × height). 0~1 비율 그대로 재면 가로세로가 왜곡된다.
+- 조절 가능한 기준값은 `focuseye/config.py`에 모으고, 쉬운 한국어로 "바꾸는 법"을 주석에 쓴다.
+  필요하면 `main.py`에 같은 이름의 명령줄 옵션도 만든다.
+- 판단 로직(`EyeStateDetector.update` 등)은 시각 `now`를 인자로 받는다 → 가짜 시간으로 테스트 가능.
+- 눈 뜬 EAR은 사람·표정마다 크게 다르다 (테스트 사진 0.20~0.55). 기본 기준값 0.18 + `c` 키 보정.
+- 각 단계의 원리 설명은 `docs/stageN_*.md`에 보고서용으로 쓴다 (사용자가 보고서에 활용).
 
 ## 파일 구조
 
 - `main.py`: 웹캠 루프 (읽기 → 분석 → 그리기 → 표시, q로 종료)
 - `focuseye/face_tracker.py`: `FaceTracker` 클래스, 모델 다운로드
-- `focuseye/drawing.py`: 랜드마크·상태 텍스트 그리기
+- `focuseye/config.py`: 사용자가 바꿀 수 있는 기준값 모음
+- `focuseye/eye_state.py`: 2단계 EAR 계산, 눈 감김·졸음 판단, 보정 (`EyeStateDetector`)
+- `focuseye/drawing.py`: 랜드마크·상태 텍스트·EAR 막대·졸음 경고 그리기
+- `docs/`: 단계별 원리 설명 (보고서용)
 - `setup.bat` / `setup.sh`: 새 컴퓨터용 설치 스크립트 (.venv 생성 + requirements 설치)
 - `run.bat`: Windows 더블클릭 실행 (.venv 켜기 → `python main.py`, 오류 시 창 멈춤)
   - `main.py`는 오류면 종료 코드 1을 돌려줘야 한다 (run.bat이 이것으로 오류를 판단).
