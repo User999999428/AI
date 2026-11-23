@@ -41,6 +41,7 @@
 | 2026-11-19 | 클라우드(Claude) | Windows 더블클릭 실행용 `run.bat` 추가, 오류 시 main.py 종료 코드 1 |
 | 2026-11-19 | Windows (사용자) | 1단계 웹캠 확인: 그물망·눈동자·NOT FOUND·q 종료 정상, FPS 약 30 |
 | 2026-11-19 | 클라우드(Claude) | 2단계 구현: EAR 계산, 1.5초 이상 감으면 졸음 경고, `config.py` 기준값, `c` 키 보정, 원리 문서 |
+| 2026-11-23 | 클라우드(Claude) | `.gitignore`에 `data/` 추가 (외부 데이터셋 CEW는 재배포 금지 → git 제외), README·CLAUDE.md에 안내 |
 
 ## 메모 / 문제점
 

@@ -19,6 +19,10 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
 3. **단계별로 진행한다.** 요청받은 단계까지만 구현하고, 다음 단계 코드는 미리 만들지 않는다.
    - 단계가 끝나면 사용자가 확인할 항목을 알려 준다.
 4. 코드는 단순하게. 고급 문법·과한 추상화보다 읽기 쉬운 코드를 우선한다.
+5. **`data/` 폴더(외부 데이터셋, 예: CEW)는 절대 커밋·push하지 않는다.** 재배포 금지 데이터다.
+   - `.gitignore`에 `data/`가 들어 있다. `git add -f`로 강제로 넣지 않는다.
+   - 데이터셋 파일을 다른 폴더로 복사하거나, 일부를 잘라 저장소에 넣지도 않는다 (테스트용 샘플 포함).
+   - 커밋 전에 `git status`로 `data/` 안의 파일이 없는지 확인한다.
 
 ## 여러 컴퓨터에서 작업
 
@@ -27,7 +31,7 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
 - **작업이 끝나면 `PROGRESS.md`를 갱신**한다 (현재 상태, 확인 목록, 작업 일지 한 줄).
 - README 단계 체크박스, CLAUDE.md 단계 목록도 함께 맞춘다.
 - 패키지를 추가하면 `requirements.txt`에 넣는다 (`setup.bat`/`setup.sh`가 이 파일로 설치).
-- 컴퓨터마다 다른 것(`.venv/`, `models/`)은 커밋하지 않는다.
+- 컴퓨터마다 다른 것(`.venv/`, `models/`, `data/`)은 커밋하지 않는다.
 
 ## 개발 단계 (진행 상황은 README 체크박스와 맞춘다)
 
@@ -67,6 +71,7 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
 - `focuseye/eye_state.py`: 2단계 EAR 계산, 눈 감김·졸음 판단, 보정 (`EyeStateDetector`)
 - `focuseye/drawing.py`: 랜드마크·상태 텍스트·EAR 막대·졸음 경고 그리기
 - `docs/`: 단계별 원리 설명 (보고서용)
+- `data/`: 외부 데이터셋 (CEW 등). git 제외, 재배포 금지. 컴퓨터마다 직접 받아 넣는다.
 - `setup.bat` / `setup.sh`: 새 컴퓨터용 설치 스크립트 (.venv 생성 + requirements 설치)
 - `run.bat`: Windows 더블클릭 실행 (.venv 켜기 → `python main.py`, 오류 시 창 멈춤)
   - `main.py`는 오류면 종료 코드 1을 돌려줘야 한다 (run.bat이 이것으로 오류를 판단).

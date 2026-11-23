@@ -198,6 +198,7 @@ python main.py
 | 코드, README, PROGRESS.md | O | `git pull`로 받음 |
 | 가상환경 `.venv/` | X (컴퓨터마다 다름) | `setup.bat` / `setup.sh` 한 번 실행 |
 | 모델 `models/` | X (용량 때문) | 첫 실행 때 자동 다운로드 |
+| 외부 데이터셋 `data/` | X (재배포 금지) | 필요한 컴퓨터에서 직접 내려받아 넣기 |
 | 얼굴 영상·사진 | X (애초에 저장 안 함) | - |
 
 ### 새 컴퓨터에서 처음 한 번
@@ -258,6 +259,8 @@ AI/
 ├── docs/
 │   └── stage2_eye_closure.md  # 눈 감김 감지 원리 (보고서용)
 ├── models/                 # AI 모델 (자동 다운로드, git에 안 올림)
+├── data/                   # 외부 데이터셋 (예: CEW). 재배포 금지 → git에 절대 안 올림
+│                           #   필요한 컴퓨터마다 직접 내려받아 이 폴더에 넣기
 ├── requirements.txt        # 필요 패키지 목록
 ├── setup.bat / setup.sh    # 새 컴퓨터 자동 설치 (Windows / Mac)
 ├── run.bat                 # Windows: 더블클릭으로 실행
