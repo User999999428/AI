@@ -36,8 +36,11 @@
 
 데이터: `data/dataset_B_FacialImages_highResolution/` (재배포 금지, git 제외)
 
-- [ ] `python tools/eval_ear_photos.py --list` → 눈 감음 ____장 / 눈 뜸 ____장 / 구분 불가 ____장
-- [ ] `python tools/eval_ear_photos.py` → 얼굴 못 찾음: 감음 ____장, 뜸 ____장
+- [x] `python tools/eval_ear_photos.py --list` → 눈 감음 1192장 / 눈 뜸 **0장** / 구분 불가 0장
+  (하위 폴더 없이 사진이 바로 있고, 파일 이름으로 구분됨. **눈 뜬 사진이 없어서 정확도 계산 불가**)
+- [ ] 눈 뜬 얼굴 사진 구해서 `data/` 안 다른 폴더(이름에 open 포함)에 넣기 → `--data data`로 검증
+- [ ] (지금 가능) `python tools/eval_ear_photos.py` → 감은 눈 EAR 분포, 기준값별 감은 눈 맞힘 비율
+- [ ] 얼굴 못 찾음: 감음 ____장, 뜸 ____장
 - [ ] 눈 뜬 EAR 중앙값 ____ / 눈 감은 EAR 중앙값 ____
 - [ ] 정확도가 가장 높은 기준값 ____ (정확도 ____%)
 - [ ] CEW 공식 페이지에서 라이선스 원문과 논문 정보 확인 → `docs/dataset_cew.md`와 맞는지
@@ -53,6 +56,8 @@
 | 2026-11-19 | 클라우드(Claude) | 2단계 구현: EAR 계산, 1.5초 이상 감으면 졸음 경고, `config.py` 기준값, `c` 키 보정, 원리 문서 |
 | 2026-11-23 | 클라우드(Claude) | `.gitignore`에 `data/` 추가 (외부 데이터셋 CEW는 재배포 금지 → git 제외), README·CLAUDE.md에 안내 |
 | 2026-11-23 | 클라우드(Claude) | 사진 검증 스크립트 `tools/eval_ear_photos.py`, `docs/dataset_cew.md`(출처·라이선스), FaceTracker 사진 모드 추가. CEW 데이터가 클라우드에 없어 실제 실행은 못 함 (가짜 데이터로 동작만 확인) |
+| 2026-11-23 | Windows (사용자) | CEW `--list` 실행: 눈 감은 사진 1192장만 있음, 눈 뜬 사진 0장 → 정확도 계산 불가 |
+| 2026-11-23 | 클라우드(Claude) | 검증 스크립트가 한 종류 사진만 있어도 분석하도록 수정 (감은 눈 EAR 분포·맞힘 비율). 근거 데이터가 없어 `config.py` 기준값·원리 문서는 변경 안 함 |
 
 ## 메모 / 문제점
 

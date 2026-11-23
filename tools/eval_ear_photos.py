@@ -78,7 +78,10 @@ def print_structure(root, images):
         counts[folder][0] += 1
     names = {"closed": "눈 감음", "open": "눈 뜸", None: "구분 불가"}
     for folder, (n, label) in sorted(counts.items()):
-        print(f"  {str(folder) or '(맨 위 폴더)':<40} 사진 {n:>5}장  → {names[label]}")
+        # 맨 위 폴더는 "." 으로 나와서 알아보기 쉽게 바꾼다
+        # (맨 위 폴더에 사진이 바로 있으면 파일 이름으로 구분한다)
+        name = "(맨 위 폴더, 파일 이름으로 구분)" if str(folder) == "." else str(folder)
+        print(f"  {name:<40} 사진 {n:>5}장  → {names[label]}")
     total = {k: sum(1 for i in images if label_from_path(i, root) == k) for k in names}
     print(f"  합계: 눈 감음 {total['closed']}장, 눈 뜸 {total['open']}장, 구분 불가 {total[None]}장")
     return total
@@ -128,19 +131,20 @@ def accuracy_table(rows):
     """얼굴을 찾은 사진들로 기준값마다 정확도를 계산한다.
 
     판단 규칙은 프로그램과 같다: EAR < 기준값 이면 '눈 감음'.
+    한 종류 사진만 있으면, 없는 쪽 비율과 전체 정확도는 계산할 수 없어서 None으로 둔다.
     """
     closed = [r["ear"] for r in rows if r["label"] == "closed"]
     opened = [r["ear"] for r in rows if r["label"] == "open"]
+    both = bool(closed) and bool(opened)
     table = []
     for th in THRESHOLDS:
         closed_ok = sum(1 for e in closed if e < th)  # 감은 사진을 '감음'으로 맞힘
         open_ok = sum(1 for e in opened if e >= th)  # 뜬 사진을 '뜸'으로 맞힘
-        total = len(closed) + len(opened)
         table.append({
             "threshold": th,
-            "accuracy": (closed_ok + open_ok) / total if total else 0,
-            "closed_correct_rate": closed_ok / len(closed) if closed else 0,
-            "open_correct_rate": open_ok / len(opened) if opened else 0,
+            "accuracy": (closed_ok + open_ok) / (len(closed) + len(opened)) if both else None,
+            "closed_correct_rate": closed_ok / len(closed) if closed else None,
+            "open_correct_rate": open_ok / len(opened) if opened else None,
         })
     return table
 
@@ -156,14 +160,23 @@ def print_ear_stats(rows):
                   f"{statistics.median(ears):>8.3f}{min(ears):>8.3f}{max(ears):>8.3f}")
 
 
+def _pct(value):
+    """비율을 '95.0%'처럼 바꾼다. 계산할 수 없는 값(None)은 '-'."""
+    return "-" if value is None else f"{value:.1%}"
+
+
 def print_table(table):
+    """표를 출력하고, 정확도가 가장 높은 줄을 돌려준다 (정할 수 없으면 None)."""
     print("\n[기준값별 정확도]  판단 규칙: EAR < 기준값 → 눈 감음")
     print(f"  {'기준값':>6}  {'전체 정확도':>10}  {'감은 눈 맞힘':>10}  {'뜬 눈 맞힘':>10}")
-    best = max(table, key=lambda t: t["accuracy"])
+    # 눈 뜬/감은 사진이 둘 다 있어야 '가장 좋은 기준값'을 정할 수 있다
+    best = None
+    if table[0]["accuracy"] is not None:
+        best = max(table, key=lambda t: t["accuracy"])
     for t in table:
         mark = "  ← 최고" if t is best else ""
-        print(f"  {t['threshold']:>6.2f}  {t['accuracy']:>10.1%}  "
-              f"{t['closed_correct_rate']:>10.1%}  {t['open_correct_rate']:>10.1%}{mark}")
+        print(f"  {t['threshold']:>6.2f}  {_pct(t['accuracy']):>10}  "
+              f"{_pct(t['closed_correct_rate']):>10}  {_pct(t['open_correct_rate']):>10}{mark}")
     return best
 
 
@@ -198,10 +211,15 @@ def main():
     total = print_structure(root, images)
     if args.list:
         return 0
-    if total["closed"] == 0 or total["open"] == 0:
+    if total["closed"] == 0 and total["open"] == 0:
         print("\n[오류] 눈 뜬 사진과 감은 사진을 구분하지 못했습니다.")
         print("       폴더 이름에 open / close 가 들어 있어야 합니다. 위 [폴더 구조] 출력을 확인하세요.")
         return 1
+    if total["closed"] == 0 or total["open"] == 0:
+        # 한 종류만 있어도 그 사진들의 EAR 분포와 '맞힌 비율'은 알 수 있다
+        missing = "눈 뜬" if total["open"] == 0 else "눈 감은"
+        print(f"\n[주의] {missing} 사진이 없습니다. 있는 사진만 분석합니다.")
+        print("       전체 정확도와 '가장 좋은 기준값'은 두 종류가 다 있어야 계산할 수 있습니다.")
 
     # 라벨을 아는 사진만 분석
     targets = [(p, label_from_path(p, root)) for p in images]
@@ -235,11 +253,15 @@ def main():
     print_ear_stats(found)
     table = accuracy_table(found)
     best = print_table(table)
-    print(f"\n→ 이 사진들에서는 기준값 {best['threshold']:.2f}일 때 정확도가 가장 높습니다 ({best['accuracy']:.1%}).")
-    print("  (사진 속 사람들 기준이라 내 눈과 다를 수 있습니다. 실제 사용 땐 c 키 보정도 함께 쓰세요)")
+    if best is not None:
+        print(f"\n→ 이 사진들에서는 기준값 {best['threshold']:.2f}일 때 정확도가 가장 높습니다 ({best['accuracy']:.1%}).")
+        print("  (사진 속 사람들 기준이라 내 눈과 다를 수 있습니다. 실제 사용 땐 c 키 보정도 함께 쓰세요)")
+    else:
+        print("\n→ 한 종류 사진만 있어서 '가장 좋은 기준값'은 정할 수 없습니다.")
+        print("  (감은 눈만 있으면 기준값을 높일수록 무조건 더 잘 맞히기 때문. 뜬 눈을 잘못 잡는 정도를 모름)")
 
-    # 숫자만 CSV로 저장
-    save_csv(SUMMARY_CSV, [{k: (round(v, 4) if isinstance(v, float) else v) for k, v in t.items()}
+    # 숫자만 CSV로 저장 (계산할 수 없는 칸은 빈칸)
+    save_csv(SUMMARY_CSV, [{k: ("" if v is None else round(v, 4)) for k, v in t.items()}
                            for t in table],
              ["threshold", "accuracy", "closed_correct_rate", "open_correct_rate"])
     save_csv(PER_IMAGE_CSV, rows, ["file", "label", "face_found", "ear_left", "ear_right", "ear"])
