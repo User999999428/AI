@@ -70,7 +70,13 @@ FocusEye+ 작업 시 지켜야 할 규칙. 프로젝트 소개는 README.md 참�
 - `focuseye/config.py`: 사용자가 바꿀 수 있는 기준값 모음
 - `focuseye/eye_state.py`: 2단계 EAR 계산, 눈 감김·졸음 판단, 보정 (`EyeStateDetector`)
 - `focuseye/drawing.py`: 랜드마크·상태 텍스트·EAR 막대·졸음 경고 그리기
-- `docs/`: 단계별 원리 설명 (보고서용)
+- `docs/`: 단계별 원리 설명 (보고서용), `dataset_cew.md` (CEW 출처·라이선스)
+- `tools/eval_ear_photos.py`: 사진 데이터셋으로 EAR 기준값별 정확도 검증 (웹캠 불필요)
+  - 폴더/파일 이름의 `close`/`open`으로 라벨을 정한다. `--list`로 구조 먼저 확인.
+  - `FaceTracker(image_mode=True)` 사용 (사진마다 독립 분석. VIDEO 모드는 앞 사진 정보가 섞임).
+  - 결과: `results/ear_threshold_accuracy.csv` (요약, 커밋 가능),
+    `data/results/ear_per_image.csv` (데이터셋 파일 이름 포함 → data/ 안, 커밋 안 됨). 사진 저장 금지.
+- `results/`: 검증 결과 숫자 요약 CSV
 - `data/`: 외부 데이터셋 (CEW 등). git 제외, 재배포 금지. 컴퓨터마다 직접 받아 넣는다.
 - `setup.bat` / `setup.sh`: 새 컴퓨터용 설치 스크립트 (.venv 생성 + requirements 설치)
 - `run.bat`: Windows 더블클릭 실행 (.venv 켜기 → `python main.py`, 오류 시 창 멈춤)

@@ -171,6 +171,15 @@ python main.py
 | `DROWSY_SECONDS` | 1.5 | 이 시간(초) 이상 계속 감으면 "졸음" |
 | `CALIBRATION_RATIO` | 0.6 | 보정 때 "눈 뜬 EAR × 이 비율"을 기준값으로 씀 |
 
+### 웹캠 없이 사진으로 검증하기
+
+눈 뜬/감은 얼굴 사진 데이터셋(CEW)으로, 기준값 0.10~0.30에서 각각 정확도가 얼마인지 확인할 수 있습니다.
+데이터 넣는 위치, 실행 방법, 라이선스는 [docs/dataset_cew.md](docs/dataset_cew.md)를 보세요.
+
+```bash
+python tools/eval_ear_photos.py
+```
+
 ### 자주 나는 문제
 
 | 증상 | 해결 |
@@ -256,8 +265,12 @@ AI/
 │   ├── face_tracker.py     # MediaPipe로 얼굴 랜드마크 찾기
 │   ├── eye_state.py        # 2단계: EAR 계산, 눈 감김·졸음 판단, 보정
 │   └── drawing.py          # 화면에 랜드마크·상태 글자 그리기
+├── tools/
+│   └── eval_ear_photos.py  # 웹캠 없이 사진(CEW 등)으로 EAR 기준값별 정확도 검증
+├── results/                # 검증 결과 숫자 요약 (CSV, 사진 없음)
 ├── docs/
-│   └── stage2_eye_closure.md  # 눈 감김 감지 원리 (보고서용)
+│   ├── stage2_eye_closure.md  # 눈 감김 감지 원리 (보고서용)
+│   └── dataset_cew.md      # CEW 데이터셋 출처·라이선스·사용법
 ├── models/                 # AI 모델 (자동 다운로드, git에 안 올림)
 ├── data/                   # 외부 데이터셋 (예: CEW). 재배포 금지 → git에 절대 안 올림
 │                           #   필요한 컴퓨터마다 직접 내려받아 이 폴더에 넣기

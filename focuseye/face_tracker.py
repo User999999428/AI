@@ -38,11 +38,19 @@ def ensure_model(path: Path = MODEL_PATH) -> Path:
 class FaceTracker:
     """웹캠 프레임을 넣으면 얼굴 랜드마크를 돌려주는 클래스."""
 
-    def __init__(self, num_faces: int = 1):
+    def __init__(self, num_faces: int = 1, image_mode: bool = False):
+        """
+        image_mode=False (기본): 웹캠용 VIDEO 모드.
+            연속된 프레임을 처리한다. 앞 프레임 정보를 이용해 더 빠르고 안정적이다.
+        image_mode=True: 사진용 IMAGE 모드.
+            사진을 한 장씩 따로 분석한다. 서로 관계없는 사진 여러 장을 검사할 때 쓴다.
+            (VIDEO 모드로 다른 사진을 넣으면 앞 사진의 얼굴 위치 정보가 섞일 수 있다)
+        """
+        self.image_mode = image_mode
+        mode = vision.RunningMode.IMAGE if image_mode else vision.RunningMode.VIDEO
         options = vision.FaceLandmarkerOptions(
             base_options=BaseOptions(model_asset_path=str(ensure_model())),
-            # VIDEO 모드: 연속된 프레임을 처리. 앞 프레임 정보를 이용해 더 빠르고 안정적이다.
-            running_mode=vision.RunningMode.VIDEO,
+            running_mode=mode,
             num_faces=num_faces,  # 공부하는 사람 1명만 분석
             # 5단계 이후 표정 분석 등에 쓸 수 있는 옵션 (지금은 끔)
             output_face_blendshapes=False,
@@ -63,6 +71,10 @@ class FaceTracker:
         # OpenCV는 BGR 순서, MediaPipe는 RGB 순서를 쓰므로 색 순서를 바꾼다
         rgb = frame_bgr[:, :, ::-1].copy()
         mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
+
+        # 사진 모드: 시간 정보 없이 이 사진 한 장만 분석
+        if self.image_mode:
+            return self._landmarker.detect(mp_image)
 
         # VIDEO 모드는 '시간(ms)'이 계속 커져야 한다
         ts = int((time.monotonic() - self._start) * 1000)

@@ -32,6 +32,16 @@
 - [ ] 오판 상황 확인: 아래를 내려다볼 때 / 웃을 때 / 안경 쓸 때 (CLOSED가 잘못 뜨는지)
 - [ ] 2단계 추가 후에도 FPS가 15 이상이다 (실제 값: ____ )
 
+## 2단계 사진 검증 (CEW 데이터셋, 웹캠 없는 컴퓨터에서)
+
+데이터: `data/dataset_B_FacialImages_highResolution/` (재배포 금지, git 제외)
+
+- [ ] `python tools/eval_ear_photos.py --list` → 눈 감음 ____장 / 눈 뜸 ____장 / 구분 불가 ____장
+- [ ] `python tools/eval_ear_photos.py` → 얼굴 못 찾음: 감음 ____장, 뜸 ____장
+- [ ] 눈 뜬 EAR 중앙값 ____ / 눈 감은 EAR 중앙값 ____
+- [ ] 정확도가 가장 높은 기준값 ____ (정확도 ____%)
+- [ ] CEW 공식 페이지에서 라이선스 원문과 논문 정보 확인 → `docs/dataset_cew.md`와 맞는지
+
 ## 작업 일지
 
 | 날짜 | 컴퓨터 | 한 일 |
@@ -42,6 +52,7 @@
 | 2026-11-19 | Windows (사용자) | 1단계 웹캠 확인: 그물망·눈동자·NOT FOUND·q 종료 정상, FPS 약 30 |
 | 2026-11-19 | 클라우드(Claude) | 2단계 구현: EAR 계산, 1.5초 이상 감으면 졸음 경고, `config.py` 기준값, `c` 키 보정, 원리 문서 |
 | 2026-11-23 | 클라우드(Claude) | `.gitignore`에 `data/` 추가 (외부 데이터셋 CEW는 재배포 금지 → git 제외), README·CLAUDE.md에 안내 |
+| 2026-11-23 | 클라우드(Claude) | 사진 검증 스크립트 `tools/eval_ear_photos.py`, `docs/dataset_cew.md`(출처·라이선스), FaceTracker 사진 모드 추가. CEW 데이터가 클라우드에 없어 실제 실행은 못 함 (가짜 데이터로 동작만 확인) |
 
 ## 메모 / 문제점
 
